@@ -1,8 +1,9 @@
-package com.cralos.introductionmvi
+package com.cralos.introductionmvi.ui.main
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import com.cralos.introductionmvi.R
 
 class MainFragment : Fragment() {
 

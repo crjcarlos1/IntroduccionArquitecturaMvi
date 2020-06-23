@@ -1,7 +1,8 @@
-package com.cralos.introductionmvi
+package com.cralos.introductionmvi.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.cralos.introductionmvi.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,7 +14,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMainFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, MainFragment(), "MainFragment")
+            .replace(
+                R.id.fragment_container,
+                MainFragment(), "MainFragment")
             .commit()
     }
 }
