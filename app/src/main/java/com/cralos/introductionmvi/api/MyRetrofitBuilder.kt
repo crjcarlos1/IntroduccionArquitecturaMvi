@@ -15,7 +15,7 @@ object MyRetrofitBuilder {
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
     }
 
-    val service: ApiService by lazy {
+    val apiService: ApiService by lazy {
         retrofitBuilder.build().create(ApiService::class.java)
     }
 
