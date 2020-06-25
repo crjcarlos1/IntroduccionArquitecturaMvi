@@ -5,7 +5,7 @@ import com.cralos.introductionmvi.model.User
 
 data class MainViewState(
 
-    val blogPosts: List<BlogPost>? = null,
-    val user: User? = null
+    var blogPosts: List<BlogPost>? = null,
+    var user: User? = null
 
 ) {}
