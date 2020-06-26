@@ -1,16 +1,16 @@
 package com.cralos.introductionmvi.util
 
 data class DataState<T>(
-    val message: String? = null,
+    val message: Event<String>? = null,
     val loading: Boolean? = false,
-    val data: T? = null
+    val data: Event<T>? = null
 ) {
 
     companion object {
 
         /**ERROR*/
         fun <T> error(message: String): DataState<T> {
-            return DataState(message = message, loading = false, data = null)
+            return DataState(message = Event(message), loading = false, data = null)
         }
 
         /**LOADING*/
@@ -20,7 +20,11 @@ data class DataState<T>(
 
         /**DATA*/
         fun <T> data(message: String? = null, data: T? = null): DataState<T> {
-            return DataState(message = message, loading = false, data = data)
+            return DataState(
+                message = Event.messageEvent(message),
+                loading = false,
+                data = Event.dataEvent(data)
+            )
         }
 
     }
