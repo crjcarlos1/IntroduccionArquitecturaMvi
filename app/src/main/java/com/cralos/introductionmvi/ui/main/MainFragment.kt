@@ -1,18 +1,20 @@
 package com.cralos.introductionmvi.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.cralos.introductionmvi.R
+import com.cralos.introductionmvi.ui.DataStateListener
 import com.cralos.introductionmvi.ui.main.state.MainStateEvent
 
 class MainFragment : Fragment() {
     private val TAG = "MainFragment"
     private lateinit var viewModel: MainViewModel
+    private lateinit var dataStateHandler: DataStateListener
 
     override
     fun onCreateView(
@@ -32,10 +34,35 @@ class MainFragment : Fragment() {
         subscribeObservers()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_get_user -> triggerGetUserEvent()
+            R.id.action_get_blogs -> triggerGetBlogsEvent()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            dataStateHandler = context as DataStateListener
+        } catch (e: ClassCastException) {
+            Log.e(TAG, "DEBUG: $context must implement DataStateListener.")
+        }
+    }
+
     private fun subscribeObservers() {
 
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             Log.e(TAG, "DEBUG: dataState -> $dataState")
+
+            /**Loading and message*/
+            dataStateHandler.onDataStateChange(dataState)
 
             /**HANDLE DATA<T>*/
             dataState.data?.let { mainViewState ->
@@ -48,16 +75,6 @@ class MainFragment : Fragment() {
                     /**set user data*/
                     viewModel.setUser(user)
                 }
-            }
-
-            /**HANDLE ERROR*/
-            dataState.message?.let {message ->
-
-            }
-
-            /**HANDLE LOADING*/
-            dataState.loading.let {
-
             }
 
         })
@@ -74,19 +91,6 @@ class MainFragment : Fragment() {
             viewState.user?.let { Log.e(TAG, "debug: setting user data $viewState") }
 
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.main_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_get_user -> triggerGetUserEvent()
-            R.id.action_get_blogs -> triggerGetBlogsEvent()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun triggerGetUserEvent() {
