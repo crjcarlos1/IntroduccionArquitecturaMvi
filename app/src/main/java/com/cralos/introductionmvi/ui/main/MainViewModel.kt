@@ -10,6 +10,7 @@ import com.cralos.introductionmvi.repository.Repository
 import com.cralos.introductionmvi.ui.main.state.MainStateEvent
 import com.cralos.introductionmvi.ui.main.state.MainViewState
 import com.cralos.introductionmvi.util.AbsentLiveData
+import com.cralos.introductionmvi.util.DataState
 
 class MainViewModel : ViewModel() {
 
@@ -19,15 +20,16 @@ class MainViewModel : ViewModel() {
     val viewState: LiveData<MainViewState>
         get() = _viewState
 
-    val dataState: LiveData<MainViewState> = Transformations.switchMap(_stateEvent) { stateEvent ->
+    val dataState: LiveData<DataState<MainViewState>> =
+        Transformations.switchMap(_stateEvent) { stateEvent ->
 
-        stateEvent?.let { stateEvent ->
-            handleStateEvent(stateEvent)
+            stateEvent?.let { stateEvent ->
+                handleStateEvent(stateEvent)
+            }
+
         }
 
-    }
-
-    fun handleStateEvent(stateEvent: MainStateEvent): LiveData<MainViewState> {
+    fun handleStateEvent(stateEvent: MainStateEvent): LiveData<DataState<MainViewState>> {
         when (stateEvent) {
 
             is MainStateEvent.GetBlogPostsEvent -> {

@@ -3,6 +3,7 @@ package com.cralos.introductionmvi.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,14 +37,27 @@ class MainFragment : Fragment() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             Log.e(TAG, "DEBUG: dataState -> $dataState")
 
-            dataState.blogPosts?.let { blogPosts ->
-                /**setBlog spots data*/
-                viewModel.setBlogListData(blogPosts)
+            /**HANDLE DATA<T>*/
+            dataState.data?.let { mainViewState ->
+                mainViewState.blogPosts?.let { blogPosts ->
+                    /**setBlog spots data*/
+                    viewModel.setBlogListData(blogPosts)
+                }
+
+                mainViewState.user?.let { user ->
+                    /**set user data*/
+                    viewModel.setUser(user)
+                }
             }
 
-            dataState.user?.let { user ->
-                /**set user data*/
-                viewModel.setUser(user)
+            /**HANDLE ERROR*/
+            dataState.message?.let {message ->
+
+            }
+
+            /**HANDLE LOADING*/
+            dataState.loading.let {
+
             }
 
         })
@@ -68,9 +82,9 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.action_get_user -> triggerGetUserEvent()
-            R.id.action_get_blogs->triggerGetBlogsEvent()
+            R.id.action_get_blogs -> triggerGetBlogsEvent()
         }
         return super.onOptionsItemSelected(item)
     }
